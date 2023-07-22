@@ -61,6 +61,7 @@ app.get('/', function (req, res){
           } else {
             
             const updateData = results.map((data)=>{ return data  });
+            //here we can use io.emit but that will not give callback or able to get responce
             socket.emit('indexfundsresult', updateData, (responce)=>{
               console.log(responce.status);
             });
@@ -68,6 +69,34 @@ app.get('/', function (req, res){
         });
   
     }, 4000);
+
+    socket.on("updatewpsql", (reps)=>{
+      console.log(reps.nifity50);
+      console.log(reps.sensex);
+      console.log(reps.banknifty);
+
+     const query = `UPDATE ${preFix}postmeta as pm SET pm.meta_value=${reps.nifity50} where pm.meta_key='nifty_50' `;
+      con.query(query, (error, results) => {
+        if (error) {
+          console.error('Error executing MySQL query:', error);
+        } 
+      });
+
+      const query2 = `UPDATE ${preFix}postmeta as pm SET pm.meta_value=${reps.sensex} where pm.meta_key='sensex' `;
+      con.query(query2, (error, results) => {
+        if (error) {
+          console.error('Error executing MySQL query:', error);
+        } 
+      });
+
+      const query3 = `UPDATE ${preFix}postmeta as pm SET pm.meta_value=${reps.banknifty} where pm.meta_key='nifty_bank' `;
+      con.query(query3, (error, results) => {
+        if (error) {
+          console.error('Error executing MySQL query:', error);
+        } 
+      });
+
+    });
 
    /* socket.on("datareturned",(client_msg,callback)=>{
     console.log(client_msg);
