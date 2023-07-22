@@ -61,23 +61,23 @@ app.get('/', function (req, res){
           } else {
             
             const updateData = results.map((data)=>{ return data  });
-
-           /*const marketindex = { 
-            'finnifty': results.data[0].acf.finnifty,
-            'nifty_50': results.data[0].acf.nifty_50, 
-            'nifty_100': results.data[0].acf.nifty_100,
-            'nifty_bank': results.data[0].acf.nifty_bank,
-            'nifty_midcap_100': results.data[0].acf.nifty_midcap_100,
-            'nifty_next_50': results.data[0].acf.nifty_next_50,
-            'sp_bse_100': results.data[0].acf.sp_bse_100,
-            'sensex':  results.data[0].acf.sensex, 
-            };*/
-
-            io.emit('indexfundsresult', updateData);
+            socket.emit('indexfundsresult', updateData, (responce)=>{
+              console.log(responce.status);
+            });
           }
         });
   
     }, 4000);
+
+   /* socket.on("datareturned",(client_msg,callback)=>{
+    console.log(client_msg);
+   // io.emit("datareturned_callback","server got a responce");
+      callback({
+        status: "OK"
+      });
+
+    });*/
+
    socket.on("disconnect", ()=>{
                 console.log("new user disconnected from system");
                 clearInterval(interval); // Clear the interval when the client disconnects
